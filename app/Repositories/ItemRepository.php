@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Repositories;
+namespace Previs\Repositories;
 
-use App\Interfaces\RepositoryInterface;
+use Previs\Interfaces\RepositoryInterface;
 use Illuminate\Support\Collection;
-use App\Models\Item;
+use Previs\Models\Item;
 
 class ItemRepository extends Repository implements RepositoryInterface
 {
     /**
      * Instance of the item class
      *
-     * @var App\Models\Item
+     * @var Previs\Models\Item
      */
     protected $item;
 
@@ -69,12 +69,14 @@ class ItemRepository extends Repository implements RepositoryInterface
 
             $item->item_name = $data['name'];
             $item->item_price = $data['price'];
-            $item->item_category = $data['category'] ?: '';
-            $item->sku = $data['sku'] ?: '';
+            $item->item_category = $data['category'] ?: null;
+            $item->sku = $data['sku'] ?: null;
             $item->number_in_stock = $data['number_in_stock'];
             $item->description = $data['description'];
-            $item->discount = $data['discount'] ?: '';
+            $item->discount = $data['discount'] ?: null;
             $item->isAvaliable = '1';
+            $item->slug = slug($data['name']);
+            // $item->image_path
 
             $item->update();
 

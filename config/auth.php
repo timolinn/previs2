@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => Previs\User::class,
+            'model' => Previs\Models\User::class,
         ],
 
         // 'users' => [

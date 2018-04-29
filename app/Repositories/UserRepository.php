@@ -1,25 +1,25 @@
 <?php
 
-namespace App\Repositories;
+namespace Previs\Repositories;
 
-use App\Interfaces\RepositoryInterface;
+use Previs\Interfaces\RepositoryInterface;
 use Illuminate\Support\Collection;
-use App\Models\User;
-use App\Providers\AuthServiceProvider;
+use Previs\Models\User;
+use Previs\Providers\AuthServiceProvider;
 
 class UserRepository extends Repository implements RepositoryInterface
 {
     /**
      * Instance of the User class
      *
-     * @var App\Models\User
+     * @var Previs\Models\User
      */
     public $user;
 
     /**
      * AuthProivder Instance
      *
-     * @var App\Providers\AuthServiceProvider
+     * @var Previs\Providers\AuthServiceProvider
      */
     protected $provider;
 

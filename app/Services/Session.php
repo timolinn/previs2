@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace Previs\Services;
 
 
 class Session

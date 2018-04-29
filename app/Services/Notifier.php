@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace Previs\Services;
 
-use App\Models\Order;
-use App\Models\User;
+use Previs\Models\Order;
+use Previs\Models\User;
 
 class Notifier
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace Previs\Services;
 
 use PHPMailer\PHPMailer\PHPMailer;
 

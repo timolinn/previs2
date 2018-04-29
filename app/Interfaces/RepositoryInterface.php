@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Interfaces;
+namespace Previs\Interfaces;
 
 use Illuminate\Support\Collection;
 // use Illuminate\Database\Eloquent\Collection;

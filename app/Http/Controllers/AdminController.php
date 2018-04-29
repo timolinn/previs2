@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Previs\Http\Controllers;
 
 
-use App\Services\Session;
-use App\Models\Auth;
-use App\Models\User;
-use App\Services\Notifier;
+use Previs\Services\Session;
+use Previs\Models\Auth;
+use Previs\Models\User;
+use Previs\Services\Notifier;
 
 class AdminController extends Controller
 {

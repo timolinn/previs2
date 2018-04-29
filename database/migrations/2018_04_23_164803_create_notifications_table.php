@@ -13,10 +13,19 @@ class CreateNotificationsTable extends Migration
      */
     public function up()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        Schema::dropIfExists('notifications');
         Schema::create('notifications', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('message');
+            $table->text('description')->nullable();
+            $table->string('link_url')->nullable();
+            $table->string('event')->nullable();
             $table->timestamps();
         });
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 
     /**
@@ -26,6 +35,8 @@ class CreateNotificationsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
         Schema::dropIfExists('notifications');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 }

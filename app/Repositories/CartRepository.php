@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Repositories;
+namespace Previs\Repositories;
 
 use Illuminate\Support\Collection;
-use App\Models\Cart;
-use App\Models\Auth;
-use App\Models\Item;
+use Previs\Models\Cart;
+use Previs\Models\Auth;
+use Previs\Models\Item;
 
 class CartRepository extends Repository
 {
@@ -31,12 +31,12 @@ class CartRepository extends Repository
 
     public function create(Item $item): Collection
     {
-        $cartId = md5(Auth::id());
+        // $cartId = md5(Auth::id());
 
-        $cart = $this->cart->make($cartId, $item);
+        $cart = $this->cart->make($item);
 
         if ($cart) {
-            return $this->parse($cart);
+            return $this->parse($cart->toArray());
         }
 
         return new Collection(['error' => 'Something went wrong.']);

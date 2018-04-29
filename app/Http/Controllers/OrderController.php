@@ -1,22 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Previs\Http\Controllers;
 
-use App\Repositories\OrderRepository as OrdRep;
+use Previs\Repositories\OrderRepository as OrdRep;
 
-use App\Services\Session;
-use App\Services\Notifier;
-use PDC\Request;
-use App\Models\Auth;
-use App\Models\Order;
-use App\Models\User;
+use Previs\Services\Notifier;
+use Illuminate\Http\Request;
+use Previs\Models\Order;
+use Previs\Models\User;
 
 class OrderController extends Controller
 {
     /**
      * ItemRepository Instance
      *
-     * @var \App\Repositories\OrderRepository
+     * @var \Previs\Repositories\OrderRepository
      */
     protected $ord;
 
@@ -24,13 +22,7 @@ class OrderController extends Controller
     {
         $this->ord = $ord;
 
-        if (!Auth::check()) {
-            return redirect('auth/login');
-        }
-
-        if (!Auth::user()->isAdmin()) {
-            return redirect('items');
-        }
+        $this->middleware(['auth', 'admin']);
     }
 
     public function deliver($id)
@@ -55,7 +47,7 @@ class OrderController extends Controller
         $orders = $this->ord->getAll();
         // dd($orders);
 
-        return renderView('orders.index', compact('orders'));
+        return view('orders.index', compact('orders'));
     }
 
     public function getOrder($id)
@@ -71,12 +63,12 @@ class OrderController extends Controller
 
     public function getCreate()
     {
-        return renderView('orders.create');
+        return view('orders.create');
     }
 
     public function getEdit()
     {
-        return renderView('orders.edit');
+        return view('orders.edit');
     }
 
     public function createNewOrder(Request $pdcRequest)

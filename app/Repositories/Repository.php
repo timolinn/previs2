@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace Previs\Repositories;
 
 use Illuminate\Support\Collection;
 

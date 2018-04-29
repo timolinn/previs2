@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace Previs\Models;
 
-use App\Models\User;
+use Previs\Models\User;
 
 class Auth
 {

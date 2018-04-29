@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Previs\Http\Controllers;
 
 
 use PDC\Request;
-use App\Repositories\UserRepository as UserRepo;
-use App\Services\Notifier;
-use App\Services\Session;
-use App\Models\Auth;
+use Previs\Repositories\UserRepository as UserRepo;
+use Previs\Services\Notifier;
+use Previs\Services\Session;
+use Previs\Models\Auth;
 
 class AuthController extends Controller
 {
@@ -23,7 +23,7 @@ class AuthController extends Controller
         if (Auth::check()) {
             return redirect('dashboard');
         }
-        return renderView('auth.login');
+        return view('auth.login');
     }
 
     public function getRegisterForm()
@@ -32,7 +32,7 @@ class AuthController extends Controller
         if (Auth::check()) {
             return redirect('dashboard');
         }
-        return renderView('auth.register');
+        return view('auth.register');
     }
 
     public function postRegister(Request $pdcRequest)

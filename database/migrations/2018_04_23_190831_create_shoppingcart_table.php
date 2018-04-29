@@ -11,6 +11,7 @@ class CreateShoppingcartTable extends Migration
      */
     public function up()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
         Schema::create(config('cart.database.table'), function (Blueprint $table) {
             $table->string('identifier');
             $table->string('instance');
@@ -19,12 +20,15 @@ class CreateShoppingcartTable extends Migration
 
             $table->primary(['identifier', 'instance']);
         });
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
     /**
      * Reverse the migrations.
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
         Schema::drop(config('cart.database.table'));
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 }

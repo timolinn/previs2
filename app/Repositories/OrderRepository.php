@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Repositories;
+namespace Previs\Repositories;
 
-use App\Interfaces\RepositoryInterface;
+use Previs\Interfaces\RepositoryInterface;
 use Illuminate\Support\Collection;
-use App\Models\Order;
-use App\Models\Cart;
-use App\Models\Auth;
-use App\Services\Session;
+use Previs\Models\Order;
+use Previs\Models\Cart;
+use Previs\Models\Auth;
+use Previs\Services\Session;
 
 class OrderRepository extends Repository implements RepositoryInterface
 {
     /**
      * Instance of the Order class
      *
-     * @var App\Models\Order
+     * @var Previs\Models\Order
      */
     protected $order;
 

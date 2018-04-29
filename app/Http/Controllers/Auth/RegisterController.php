@@ -2,7 +2,7 @@
 
 namespace Previs\Http\Controllers\Auth;
 
-use Previs\User;
+use Previs\Models\User;
 use Previs\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -28,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/dashboard';
 
     /**
      * Create a new controller instance.
@@ -49,8 +49,11 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
+            'uname' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'phonenumber' => 'required|integer|min:9',
             'password' => 'required|string|min:6|confirmed',
         ]);
     }
@@ -64,9 +67,28 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'user_name' => $data['uname'],
             'email' => $data['email'],
+            'first_name' => $data['firstname'],
+            'last_name' => $data['lastname'],
+            'phone_number' => $data['phonenumber'],
+            'role_id' => 3,
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    public function register(Request $request)
+    {
+        $this->validator($request)->validate();
+
+        $user = $this->create($request->all());
+
+        $res = Notifier::welcome($user); // send welcome email
+
+        $this->guard()->login($user);
+
+        return $this->registered($request, $user)
+                        ?: redirect($this->redirectPath());
+
     }
 }

@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace Previs\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Arr;
-use Cart\Storage\SessionStore;
-use App\Services\Session;
-use Cart\Cart as MCart;
+use Cart as CartManager;
+use Gloudemans\Shoppingcart\CartItem;
 
 class Cart extends Model implements \JsonSerializable
 {
@@ -16,6 +15,8 @@ class Cart extends Model implements \JsonSerializable
         'cart',
     ];
 
+    protected $table = 'shoppingcarts';
+
     public $items = [];
 
     protected $casts = [
@@ -23,28 +24,19 @@ class Cart extends Model implements \JsonSerializable
         'created_at' => 'date'
     ];
 
-    public function add(CartItem $item)
+    private $cartMan;
+
+    public function __construct(CartManager $cartMan)
     {
+        parent::__construct();
 
-        if ($this->itemExists($item)) {
-            return array_map(function($it) use ($item) {
-                if ($item->id == $it->id) {
-                    $it->quantity += $item->quantity;
-                    return $it;
-                }
-            }, $this->items);
-        } else {
-
-            $this->items[] = $item;
-        }
-
-
-        return $this;
+        $this->cartMan = $cartMan;
     }
 
-    public function itemExists(CartItem $item)
+    public function itemExists(Item $item)
     {
-        foreach($this->items as $index => $value) {
+        // dd($this->getRowId($item));
+        foreach(CartManager::content() as $index => $value) {
             if ($item->id == $value->id) {
                 return true;
             }
@@ -53,39 +45,42 @@ class Cart extends Model implements \JsonSerializable
 
     public static function retrieve()
     {
-        $cart = Session::get(md5(Auth::id()));
-
-        if ($cart) {
-            return $cart->items;
-        }
-        return array();
+        return CartManager::content();
     }
 
     public function count()
     {
-        $contents = static::retrieve();
-
-        return count($contents);
+        return CartManager::count();
     }
 
-    public function make($id, Item $item)
+    private function getRowId(Item $item)
     {
-        if (Session::get($id)) {
-            $cart = Session::get($id);
-            $cart->add(new CartItem($item));
-            return $cart->items;
-        }
-        $cart = $this->add(new CartItem($item));
-
-        // saves state in session
-        $cart->persistToSession($id);
-
-        return $cart->items;
+        $content = CartManager::content();
+        $rowId = '';
+        $item = $content->filter(function($cartItem) use ($item, &$rowId) {
+            if ($cartItem->id == $item->id) {
+                $rowId = $cartItem->rowId;
+            }
+        });
+        return $rowId;
     }
 
-    public function persistToSession($id)
+    /**
+     * Creates new cart if it doesn't exists
+     * Updates Cart if it already exists
+     *
+     * @param Item $item
+     * @return CartItem[]
+     */
+    public function make(Item $item)
     {
-        return Session::set($id, $this);
+
+        $item = CartManager::add($item, $item->quantity, ['name' => $item->item_name, 'image' => $item->image_path]);
+
+        // dd(CartManager::content());
+
+        return CartManager::content();
+
     }
 
     public function persistToDb()
@@ -96,18 +91,23 @@ class Cart extends Model implements \JsonSerializable
         return $this->save();
     }
 
-    public function remove($itemId)
+    public function remove($rowId)
     {
-        return Arr::pull($this->items, $this->find($itemId));
+        return CartManager::remove($rowId);
     }
 
     public function find($itemId)
     {
-        foreach($this->items as $index => $val) {
+        foreach(CartManager::content() as $index => $val) {
             if ($val->id == $itemId) {
                 return $index;
             }
         }
+    }
+
+    public function clearAll()
+    {
+        return CartManager::destroy();
     }
 
     public function toCollection()

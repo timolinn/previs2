@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Previs\Http\Controllers;
 
 
-use App\Models\Item;
-use App\Repositories\CartRepository as CartRepo;
-use App\Models\Auth;
-use App\Models\Cart;
+use Previs\Models\Item;
+use Previs\Repositories\CartRepository as CartRepo;
+use Previs\Models\Auth;
+use Previs\Models\CartItem;
+use Previs\Models\Cart;
 
 class CartController extends Controller
 {
@@ -16,9 +17,19 @@ class CartController extends Controller
     public function __construct(CartRepo $carter)
     {
         $this->carter = $carter;
-        if (!Auth::check()) {
-            return redirect('auth/login');
-        }
+    }
+
+    public function addToCart()
+    {
+        $item = Item::find(1);
+        $cart = Cart::add($item, 3);
+        // $cart->associate('\Previs\Models\Item');
+        dd($cart->model);
+    }
+
+    public function getCartContents()
+    {
+        return Cart::retrieve()->toJson();
     }
 
     public function create($itemId, $quantity)
@@ -27,21 +38,21 @@ class CartController extends Controller
         $item = Item::find($itemId);
 
         if (!$item) {
-            return json_encode(['error' => 'Unable to add to cart']);
+            return response()->json(['error' => 'Item not found']);
         }
         $item->quantity = $quantity;
         $cart = $this->carter->create($item);
 
-        if ($cart) {
-            return json_encode(['success' => $item->item_name . ' added to cart']);
+        if (!$cart->isEmpty()) {
+            return response()->json(['success' => $item->item_name . ' added to cart', 'content' => $cart->toJson() ]);
         }
 
-        return json_encode(['error' => 'We couldnt create a cart for you']);
+        return response()->json(['error' => 'We couldnt create a cart for you']);
     }
 
     public function checkout()
     {
         $cartitems = Cart::retrieve();
-        return renderView('orders.checkout', compact('cartitems'));
+        return view('orders.checkout', compact('cartitems'));
     }
 }

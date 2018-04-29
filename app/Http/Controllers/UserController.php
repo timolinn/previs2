@@ -1,24 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Previs\Http\Controllers;
 
 
-use App\Models\Auth;
-use App\Models\User;
+use Previs\Models\Auth;
+use Previs\Models\User;
 
 class UserController extends Controller
 {
     public function __construct()
     {
-        if (!Auth::check()) {
-            return redirect('auth/login');
-        }
+        // $this->middleware('auth');
     }
 
     public function index()
     {
         $users = User::all();
 
-        return renderView('users.index');
+        return view('users.index');
     }
 }

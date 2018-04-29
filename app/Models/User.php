@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace Previs\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Providers\AuthServiceProvider;
 use Illuminate\Support\Collection;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class User extends Authenticatable
 {
+    use Notifiable;
     /**
      * Mass Fillable properties
      *
@@ -69,7 +70,7 @@ class User extends Model
             $authProvider = new AuthServiceProvider($this);
             return $authProvider->login($data);
 
-        } catch(\App\Exceptions\InvalidLoginException $e) {
+        } catch(\Previs\Exceptions\InvalidLoginException $e) {
 
             return $e->getMessage();
         }
