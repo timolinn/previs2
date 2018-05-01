@@ -54,7 +54,6 @@
                           <th colspan="2">Product</th>
                           <th>Quantity</th>
                           <th>Unit price</th>
-                          <th>Discount</th>
                           <th>Total</th>
                         </tr>
                       </thead>
@@ -72,7 +71,7 @@
                       <tfoot>
                         <tr>
                           <th colspan="5">Total</th>
-                          <th>${{ $totalAmount}}</th>
+                          <th>₦{{ $totalAmount}}</th>
                         </tr>
                       </tfoot>
                     </table>

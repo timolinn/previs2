@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Previs\Models\Cart;
 use Previs\Models\Order;
 use Previs\Models\User;
+use Cart as CartManager;
 
 class OrderController extends Controller
 {
@@ -35,7 +36,8 @@ class OrderController extends Controller
             return redirect(route('review-order'))->with('error', $order->get('error'));
         }
 
-        // Notifier::notifyAdmin(Auth::user(), Order::find($order->get('id')));
+        Notifier::sendOrderDetailsMail($request->user(), $order);
+        Notifier::notifyAdmin('new_order', \Auth::user()->fullname(), $order);
         return redirect(route('home'))->with('success', "Your order was successful. We'll notify you when it's ready. Thanks for shopping at PREVIS");
     }
 

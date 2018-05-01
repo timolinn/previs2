@@ -21,5 +21,15 @@ class UsersTableSeeder extends Seeder
             'phone_number' => '08130887771',
             'password' => \Hash::make('password')
         ]);
+
+        $user = User::create([
+            'first_name' => 'Tommy',
+            'user_name' => 'tommyleejones',
+            'last_name' => 'Jones',
+            'email' => 'xaviertim017@gmail.com',
+            'role_id' => 3,
+            'phone_number' => '08130887774',
+            'password' => \Hash::make('password')
+        ]);
     }
 }

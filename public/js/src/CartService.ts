@@ -26,6 +26,7 @@ export class CartService {
                             btn.querySelector('.fa').classList.remove('fa-spinner');
                             throw "Error: " + res.error;
                         }
+                        btn.querySelector('.fa').classList.remove('fa-spinner');
                     }).catch((err) => {
                         console.log(Error(err));
                     });

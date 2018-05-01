@@ -142,7 +142,10 @@
 										<i class="fa fa-angle-down"></i>
 									</a>
 									<ul class="account_selection">
-										<li><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out</a></li>
+										<form action="/logout" method="post">
+                              				{{ csrf_field() }}
+                                    <button type="submit" class="btn-link btn"><i class="fa fa-sign-out" aria-hidden="true"></i>Sign out</button>
+                              		</form>
 									</ul>
 									@else
 									<a href="#">

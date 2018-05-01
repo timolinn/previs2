@@ -12,13 +12,12 @@ class CreateShoppingcartTable extends Migration
     public function up()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        Schema::create(config('cart.database.table'), function (Blueprint $table) {
-            $table->string('identifier');
-            $table->string('instance');
-            $table->longText('content');
-            $table->nullableTimestamps();
-
-            $table->primary(['identifier', 'instance']);
+        Schema::create('shoppingcarts', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->jsonb('content');
+            $table->timestamps();
         });
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
@@ -28,7 +27,7 @@ class CreateShoppingcartTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        Schema::drop(config('cart.database.table'));
+        Schema::drop('shoppingcarts');
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 }

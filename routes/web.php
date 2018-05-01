@@ -11,6 +11,14 @@
 |
 */
 
+Route::get('/mailable', function () {
+    $user = Previs\Models\User::find(2);
+    $order = Previs\Models\Order::find(1);
+
+
+    return new Previs\Mail\OrderDetails($user, $order);
+});
+
 // Route::get('/', function () {
 //     return view('welcome');
 // });

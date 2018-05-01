@@ -30,6 +30,7 @@ System.register([], function (exports_1, context_1) {
                                     btn.querySelector('.fa').classList.remove('fa-spinner');
                                     throw "Error: " + res.error;
                                 }
+                                btn.querySelector('.fa').classList.remove('fa-spinner');
                             }).catch(function (err) {
                                 console.log(Error(err));
                             });

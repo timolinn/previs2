@@ -17,10 +17,12 @@ class CreateOrdersTable extends Migration
         Schema::dropIfExists('orders');
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedInteger('shoppingcart_id');
+            $table->foreign('shoppingcart_id')->references('id')->on('shoppingcarts')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('eta')->nullable();
-            $table->integer('isActive')->deefault(1);
+            $table->integer('isActive')->default(1);
             $table->integer('delivered')->default(0);
             $table->timestamps();
         });

@@ -16,7 +16,7 @@ class CreateItemsTable extends Migration
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
         Schema::dropIfExists('items');
         Schema::create('items', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('item_name');
             $table->integer('number_in_stock')->unsigned();
             $table->string('item_category');

@@ -13,7 +13,7 @@ class Cart extends Model implements \JsonSerializable
 {
     protected $fillable = [
         'user_id',
-        'cart',
+        'content',
     ];
 
     protected $table = 'shoppingcarts';
@@ -21,7 +21,7 @@ class Cart extends Model implements \JsonSerializable
     public $items = [];
 
     protected $casts = [
-        'cart' => 'array',
+        'content' => 'array',
         'created_at' => 'date'
     ];
 
@@ -44,9 +44,13 @@ class Cart extends Model implements \JsonSerializable
     {
         try {
 
-            return CartManager::instance($orderId)->store($username);
+            static::cartDestroy(); // clear cart in session. It won't work if you clear after storing.
+            // $cart = CartManager::instance($username)->store($orderId);
+
+            return $cart;
 
         } catch(CartAlreadyStoredException $e) {
+            // dd($e);
             return $e->getMessage();
         } catch(\Exception $e) {
             return $e->getMessage();
@@ -85,7 +89,7 @@ class Cart extends Model implements \JsonSerializable
      */
     public function make(Item $item)
     {
-        // $this->clearAll();
+        // $this->destroyCart();
 
         $item = CartManager::add($item, $item->quantity, ['name' => $item->item_name, 'image' => $item->image_path]);
 
@@ -119,7 +123,12 @@ class Cart extends Model implements \JsonSerializable
         }
     }
 
-    public function clearAll()
+    public function destroyCart()
+    {
+        return CartManager::destroy();
+    }
+
+    public static function cartDestroy()
     {
         return CartManager::destroy();
     }
@@ -129,14 +138,25 @@ class Cart extends Model implements \JsonSerializable
         return new Collection($this->items);
     }
 
-    // public function toJson()
-    // {
-    //     return json_encode([
-    //         'owner' => $this->user_id,
-    //         'cart' => $this->cart,
-    //         'created_on' => $this->created_at
-    //     ]);
-    // }
+    public static function getJson()
+    {
+        $content = static::retrieve();//  returns an Instance of CartManager
+
+        return json_encode([
+            'owner' => \Auth::id(),
+            'cart' => $content->toArray(),
+            'totalAmount' => CartManager::subTotal()
+        ]);
+    }
+
+    public function toJson($options = 0)
+    {
+        return json_encode([
+            'owner' => $this->user_id,
+            'cart' => $this->cart,
+            'created_on' => $this->created_at
+        ]);
+    }
 
     public function user()
     {

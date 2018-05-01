@@ -40,7 +40,12 @@
                   </ul>
                   </div>
              @endif
-            <h3>CHECKOUT</h3>
+             <div class="row">
+            <div class="col-md-12">
+              <h3 class="pull-left">CHECKOUT</h3>
+                <span class="pull-right">Have an account? <a href="{{ route('review-order') }}">login</a></span>
+            </div>
+            </div>
                 <form method="post" action="{{ route('register') }}">
                   <ul class="nav nav-pills nav-fill">
                     <li class="nav-item"><a href="{{ route('checkout') }}" class="nav-link active"> <i class="fa fa-map-marker"></i><br>Address</a></li>
