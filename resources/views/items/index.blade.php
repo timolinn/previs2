@@ -18,7 +18,7 @@
               </ul>
             @endif
             <div class="col-md-12">
-            @if ('$user->isAdmin()')
+            @if (Auth::user()->isAdmin())
                 <a href="/items/create" class="btn btn-flat  btn-success" >+ New Item</a>
             @endif
                 </div>
@@ -77,7 +77,7 @@
             e.preventDefault();
         const item = this.dataset.iid;
         const quantity = document.querySelector(`#item${this.dataset.iid}`).value;
-        fetch(`/carts/${item}/${quantity}/create`, {
+        fetch(`/cart/${item}/${quantity}/create`, {
                 method: 'GET',
                 credentials: 'same-origin',
                 mode:  'same-origin'

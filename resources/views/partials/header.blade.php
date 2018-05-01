@@ -149,7 +149,7 @@ desired effect
                           <img src="{{ asset('vendor/dist/img/avatar.png') }}" class="img-circle" alt="User Image">
 
                           <p>
-                          Auth::user()->fullname()
+                          {{ Auth::user()->fullname() }}
                               <small>Member since {{ Auth::user()->created_at->diffForHumans() }} </small>
                           </p>
                       </li>

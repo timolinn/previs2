@@ -11,6 +11,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('coloshop/plugins/OwlCarousel2-2.2.1/owl.carousel.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('coloshop/plugins/OwlCarousel2-2.2.1/owl.theme.default.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('coloshop/plugins/OwlCarousel2-2.2.1/animate.css') }}">
+<link rel="stylesheet" href="{{ asset('css/style.red.css') }}" id="theme-stylesheet">
 <link rel="stylesheet" type="text/css" href="{{ asset('coloshop/styles/main_styles.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('coloshop/styles/responsive.css') }}">
 <style>
@@ -24,9 +25,9 @@
     position: absolute;
     background-color: #f9f9f9;
 	width: 350px;
-	border-radius: 5px;
+	border-radius: 1px;
 	border: 1px solid grey;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);
     padding: 13px 16px;
     z-index: 1;
 	right: 0;
@@ -52,6 +53,58 @@
 
 .drop-item-dt {
 	flex-grow: 2;
+}
+
+.drop-item-link {
+	display: flex;
+	align-content: flex-start;
+	justify-content: space-between;
+}
+
+.drop-item-empty {
+	display: flex;
+	background: #FE4C50;
+}
+
+.drop-item-empty a {
+	align-self: center;
+	background: #FE4C50;
+	border-radius: 0 !important;
+	/* border: 2px solid black; */
+	padding-left: 50% !important;
+	padding-right: 50% !important;
+}
+
+.drop-item-link a {
+	background: #FE4C50;
+	align-self: center;
+	border-radius: 0 !important;
+	padding-left: 15% !important;
+	padding-right: 15% !important;
+}
+
+.drop-item-link a:last-child {
+	border: 2px solid #FE4C50;
+	background: transparent;
+}
+
+.drop-item-link a:last-child:hover {
+	color: white;
+	background: #FE4C50;
+}
+
+.drop-item-link:hover {
+	/* background: #FE4C50 !important; */
+}
+
+.fa-spinner {
+	color: white;
+	margin:12px;
+	animation: spinner .6s linear infinite;
+}
+
+@keyframes spinner {
+  to {transform: rotate(360deg);}
 }
 
 </style>
@@ -86,8 +139,11 @@
 									@auth
 									<a href="{{ route('account', ['user' => Auth::user()->user_name])}}">
 										My Account
-										<i class="fa fa-user"></i>
+										<i class="fa fa-angle-down"></i>
 									</a>
+									<ul class="account_selection">
+										<li><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out</a></li>
+									</ul>
 									@else
 									<a href="#">
 										My Account
@@ -113,11 +169,11 @@
 				<div class="row">
 					<div class="col-lg-12 text-right">
 						<div class="logo_container">
-							<a href="#">pre<span>vis</span></a>
+							<a href="{{ route('home') }}">pre<span>vis</span></a>
 						</div>
 						<nav class="navbar">
 							<ul class="navbar_menu">
-								<li><a href="/">home</a></li>
+								<li><a href="{{ route('home') }}">home</a></li>
 								<li><a href="#">shop</a></li>
 								<li><a href="contact.html">contact</a></li>
 							</ul>
@@ -131,19 +187,8 @@
 										<span id="checkout_items" class="checkout_items"></span>
 									</a>
 
+										 <!-- cart contents -->
 									<div class="dropdown-content" id="dropdown-content">
-										<div id="drop-content">
-											<div class="pull-right drop-item-dt">
-												<p style="color:#FE4C50;" >
-												Roasted Chicken <small style="color:#989898;"  class="pull-right" >Qty: 20</small>
-												</p>
-												<p class="pull-right"><i class="fa fa-fa-money"></i>₦ 3000.00</p>
-											</div>
-											<div class="pull-left drop-item">
-												<img src="{{ asset('imgs/goat.jpg') }}" class="mx-auto d-bloc img-fluid" width="100" height="250" alt="User Image">
-											</div>
-										</div>
-										<div class="dropdown-divider"></div>
 									</div>
 								</li>
 							</ul>
@@ -157,3 +202,34 @@
 		</div>
 
 	</header>
+	<div class="fs_menu_overlay"></div>
+	<div class="hamburger_menu">
+		<div class="hamburger_close"><i class="fa fa-times" aria-hidden="true"></i></div>
+		<div class="hamburger_menu_content text-right">
+			<ul class="menu_top_nav">
+				<li class="menu_item has-children">
+					@auth
+						<a href="#">
+							My Account
+							<i class="fa fa-angle-down"></i>
+						</a>
+						<ul class="account_selection">
+							<li><a href="/logout"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign Out</a></li>
+						</ul>
+					@else
+						<a href="#">
+							My Account
+							<i class="fa fa-angle-down"></i>
+						</a>
+						<ul class="account_selection">
+							<li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
+							<li><a href="/register"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
+						</ul>
+					@endauth
+				</li>
+				<li class="menu_item"><a href="/">home</a></li>
+				<li class="menu_item"><a href="#">shop</a></li>
+				<li class="menu_item"><a href="#">contact</a></li>
+			</ul>
+		</div>
+	</div>

@@ -58,23 +58,6 @@ class User extends Authenticatable
         return $orders;
     }
 
-    public function myCart(): array
-    {
-        return Cart::getContent();
-    }
-
-    public function attemptLogin(array $data)
-    {
-        try {
-
-            $authProvider = new AuthServiceProvider($this);
-            return $authProvider->login($data);
-
-        } catch(\Previs\Exceptions\InvalidLoginException $e) {
-
-            return $e->getMessage();
-        }
-    }
 
     public function make(Cart $cart)
     {

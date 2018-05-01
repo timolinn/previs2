@@ -5,8 +5,9 @@ namespace Previs\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Arr;
-use Cart as CartManager;
+use Cart as CartManager; // Gloudemans\Shoppingcart\Cart Facade
 use Gloudemans\Shoppingcart\CartItem;
+use Gloudemans\Shoppingcart\Exceptions\CartAlreadyStoredException;
 
 class Cart extends Model implements \JsonSerializable
 {
@@ -24,15 +25,6 @@ class Cart extends Model implements \JsonSerializable
         'created_at' => 'date'
     ];
 
-    private $cartMan;
-
-    public function __construct(CartManager $cartMan)
-    {
-        parent::__construct();
-
-        $this->cartMan = $cartMan;
-    }
-
     public function itemExists(Item $item)
     {
         // dd($this->getRowId($item));
@@ -46,6 +38,25 @@ class Cart extends Model implements \JsonSerializable
     public static function retrieve()
     {
         return CartManager::content();
+    }
+
+    public static function store($orderId, $username)
+    {
+        try {
+
+            return CartManager::instance($orderId)->store($username);
+
+        } catch(CartAlreadyStoredException $e) {
+            return $e->getMessage();
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }
+
+    }
+
+    public function totalAmount()
+    {
+        return CartManager::subTotal();
     }
 
     public function count()
@@ -74,6 +85,7 @@ class Cart extends Model implements \JsonSerializable
      */
     public function make(Item $item)
     {
+        // $this->clearAll();
 
         $item = CartManager::add($item, $item->quantity, ['name' => $item->item_name, 'image' => $item->image_path]);
 
@@ -93,7 +105,9 @@ class Cart extends Model implements \JsonSerializable
 
     public function remove($rowId)
     {
-        return CartManager::remove($rowId);
+        CartManager::remove($rowId);
+
+        return true;
     }
 
     public function find($itemId)

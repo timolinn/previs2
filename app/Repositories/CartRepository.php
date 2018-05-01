@@ -45,7 +45,7 @@ class CartRepository extends Repository
 
     public function delete($id): bool
     {
-
+        return $this->cart->remove($id);
     }
 
     public function update(array $data): Collection

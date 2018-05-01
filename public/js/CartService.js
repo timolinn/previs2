@@ -11,16 +11,45 @@ System.register([], function (exports_1, context_1) {
                     this.setCartEvents();
                 }
                 CartService.prototype.setCartEvents = function () {
+                    var _this = this;
                     var addCart = this.cart.dom.querySelectorAll(".addToCart");
-                    console.log(addCart);
                     addCart.forEach(function (btn) {
+                        var itemId = btn.dataset.iid;
                         btn.addEventListener('click', function (evnt) {
                             evnt.preventDefault();
-                            var itemId = btn.dataset.iid;
+                            btn.querySelector('.fa').classList.add('fa-spinner');
+                            CartService.getRequest("/cart/" + itemId + "/1/create")
+                                .then(function (res) {
+                                console.log(JSON.parse(res));
+                                res = JSON.parse(res);
+                                if (res.success != undefined) {
+                                    btn.querySelector('.fa').classList.remove('fa-spinner');
+                                    _this.renderUpdatedCart(); // re-render cart contents with new item
+                                }
+                                else {
+                                    btn.querySelector('.fa').classList.remove('fa-spinner');
+                                    throw "Error: " + res.error;
+                                }
+                            }).catch(function (err) {
+                                console.log(Error(err));
+                            });
                         });
                     });
                 };
-                CartService.getContent = function (url) {
+                CartService.prototype.renderUpdatedCart = function () {
+                    var _this = this;
+                    CartService.getRequest("/cart/contents")
+                        .then(function (result) {
+                        var res = JSON.parse(result);
+                        _this.cart.updateItemCount(Object.keys(res).length);
+                        var items = _this.cart.prepareBuilt(res);
+                        _this.cart.renderCart(items);
+                    }).catch(function (err) {
+                        console.log(Error(err));
+                        throw "Couldn't fetch cart " + Error(err);
+                    });
+                };
+                CartService.getRequest = function (url) {
                     return new Promise(function (resolve, reject) {
                         // Do the usual XHR stuff
                         var req = new XMLHttpRequest();

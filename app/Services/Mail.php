@@ -87,7 +87,7 @@ class Mail
         // $config = include __DIR__ . DS .'mail'.DS .'src'.DS .'config'.DS .'mail.php';
         $config = app('config')->get('mail');
 
-        return $config[$data];
+        return dd($config[$data]);
     }
 
 }

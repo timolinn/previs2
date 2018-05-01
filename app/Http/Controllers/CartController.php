@@ -44,7 +44,7 @@ class CartController extends Controller
         $cart = $this->carter->create($item);
 
         if (!$cart->isEmpty()) {
-            return response()->json(['success' => $item->item_name . ' added to cart', 'content' => $cart->toJson() ]);
+            return response()->json(['success' => $item->item_name . ' added to cart', 'content' => $cart->toArray() ]);
         }
 
         return response()->json(['error' => 'We couldnt create a cart for you']);
@@ -52,7 +52,39 @@ class CartController extends Controller
 
     public function checkout()
     {
-        $cartitems = Cart::retrieve();
-        return view('orders.checkout', compact('cartitems'));
+        if (\Auth::check()) {
+            return redirect(route('review-order'));
+        }
+
+        $cart = new Cart;
+        $totalAmount = $cart->totalAmount();
+        return view('orders.checkout', compact('totalAmount'));
+    }
+
+
+    public function getCart()
+    {
+        $cart = new Cart;
+        $cartItems = $cart::retrieve();
+        $numberOfItems = $cart->count();
+        $totalAmount = $cart->totalAmount();
+        return view('orders.cart', compact('cartItems', 'numberOfItems', 'totalAmount'));
+    }
+
+    public function getTotalAmount()
+    {
+        $amount = (new Cart)->totalAmount();
+
+        return response()->json(['success' => 'Amount Retrieved', 'content' => $amount ]);
+    }
+
+    public function deleteItem($rowId)
+    {
+        $deleted = $this->carter->delete($rowId);
+
+        if ($deleted) {
+            return redirect('cart')->with('success', 'Item removed.');
+        }
+        return redirect('cart')->with('error', 'Item not removed.');
     }
 }

@@ -7,18 +7,46 @@ export class CartService {
     }
 
     setCartEvents() {
+        var _this = this;
         const addCart = this.cart.dom.querySelectorAll(".addToCart");
-        console.log(addCart);
-        addCart.forEach(btn => {
-            btn.addEventListener('click', function(evnt: any) {
-                evnt.preventDefault();
-                const itemId = btn.dataset.iid;
 
+        addCart.forEach(btn => {
+            const itemId = btn.dataset.iid;
+            btn.addEventListener('click', function(evnt: any) { // Add event listeners to cart buttons
+                evnt.preventDefault();
+                btn.querySelector('.fa').classList.add('fa-spinner');
+                CartService.getRequest(`/cart/${itemId}/1/create`)
+                    .then((res) => {
+                        console.log(JSON.parse(res));
+                        res = JSON.parse(res);
+                        if (res.success != undefined) {
+                            btn.querySelector('.fa').classList.remove('fa-spinner');
+                            _this.renderUpdatedCart(); // re-render cart contents with new item
+                        } else {
+                            btn.querySelector('.fa').classList.remove('fa-spinner');
+                            throw "Error: " + res.error;
+                        }
+                    }).catch((err) => {
+                        console.log(Error(err));
+                    });
             });
         });
     }
 
-    public static getContent(url: string): Promise<any> {
+    renderUpdatedCart() {
+        CartService.getRequest(`/cart/contents`)
+                .then((result) => {
+                    const res = JSON.parse(result);
+                    this.cart.updateItemCount(Object.keys(res).length);
+                    let items = this.cart.prepareBuilt(res);
+                    this.cart.renderCart(items);
+                }).catch((err) => {
+                    console.log(Error(err));
+                    throw "Couldn't fetch cart " + Error(err);
+                });
+    }
+
+    public static getRequest(url: string): Promise<any> {
 
         return new Promise((resolve, reject) => {
             // Do the usual XHR stuff

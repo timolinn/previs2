@@ -7,6 +7,7 @@ use Previs\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -49,11 +50,11 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'uname' => 'required|string|max:255|unique:users',
+            'username' => 'required|string|max:255|unique:users,user_name',
             'email' => 'required|string|email|max:255|unique:users',
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'phonenumber' => 'required|integer|min:9',
+            'phonenumber' => 'required|string|min:9',
             'password' => 'required|string|min:6|confirmed',
         ]);
     }
@@ -67,7 +68,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'user_name' => $data['uname'],
+            'user_name' => $data['username'],
             'email' => $data['email'],
             'first_name' => $data['firstname'],
             'last_name' => $data['lastname'],
@@ -77,15 +78,22 @@ class RegisterController extends Controller
         ]);
     }
 
+
     public function register(Request $request)
     {
-        $this->validator($request)->validate();
+        // dd("stopped");
+        $this->validator($request->all())->validate();
 
         $user = $this->create($request->all());
 
-        $res = Notifier::welcome($user); // send welcome email
+        // $res = Notifier::welcome($user); // send welcome email
 
         $this->guard()->login($user);
+
+        if ($request->checkout == true) {
+            // dd($request->checkout);
+            return redirect(route('review-order'));
+        }
 
         return $this->registered($request, $user)
                         ?: redirect($this->redirectPath());

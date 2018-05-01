@@ -56,19 +56,14 @@ class OrderRepository extends Repository implements RepositoryInterface
     public function create(array $data): Collection
     {
         try {
+            $userId = \Auth::id();
 
-            $cart = new Cart;
-            $cart->user_id = Auth::id();
-            $cart->cart = json_encode($cart::retrieve());
-            $cart->save();
-
-
-            $this->order->user_id = Auth::id();
-            $this->order->cart_id = $cart->id;
+            $this->order->user_id = $userId;
+            $this->order->isActive = 1;
             // $this->order->eta = $data['eta'];
-
             $this->order->save();
-            Session::set(md5(Auth::id()), null);
+
+            Cart::store($this->order->id, \Auth::user()->user_name); // save the cart too
 
             return $this->parse($this->order->toArray());
 

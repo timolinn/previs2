@@ -2,31 +2,48 @@
 
 @section('content')
 
-	<div class="fs_menu_overlay"></div>
+	<!-- <div class="fs_menu_overlay"></div>
 	<div class="hamburger_menu">
 		<div class="hamburger_close"><i class="fa fa-times" aria-hidden="true"></i></div>
 		<div class="hamburger_menu_content text-right">
 			<ul class="menu_top_nav">
 				<li class="menu_item has-children">
-					<a href="#">
-						My Account
-						<i class="fa fa-angle-down"></i>
-					</a>
-					<ul class="menu_selection">
-						<li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
-						<li><a href="/register"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
-					</ul>
+				@auth
+									<a href="{{ route('account', ['user' => Auth::user()->user_name])}}">
+										My Account
+										<i class="fa fa-user"></i>
+									</a>
+									@else
+									<a href="#">
+										My Account
+										<i class="fa fa-angle-down"></i>
+									</a>
+									<ul class="account_selection">
+										<li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
+										<li><a href="/register"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
+									</ul>
+									@endauth
 				</li>
 				<li class="menu_item"><a href="/">home</a></li>
 				<li class="menu_item"><a href="#">shop</a></li>
 				<li class="menu_item"><a href="#">contact</a></li>
 			</ul>
 		</div>
-	</div>
+	</div> -->
 
 	<!-- Slider -->
 
 	<div class="main_slider" style="background-image:url({{ asset('imgs/chicken.jpg') }})">
+			@if ($message = session('error'))
+                        <ul class="alert alert-danger" style="list-style-type: none">
+                      <li>{{ $message }}</li>
+              </ul>
+            @endif
+            @if ($message = session('success'))
+            <ul class="alert alert-success" style="list-style-type:none;background:#FE4C50;color:white;">
+                      <li>{{ $message }}</li>
+              </ul>
+            @endif
 		<div class="container fill_height">
 			<div class="row align-items-center fill_height">
 				<div class="col">
@@ -96,16 +113,19 @@
 						<div class="product-item col-md-6">
 							<div class="product discount product_filter">
 								<div class="product_image">
-									<img src="{{ asset($item->image_path) }}" class="rounded img-fluid" style="max-height:200px;" alt="">
+									<img src="{{ asset($item->image_path) }}" class="rounded img-fluid" style="max-height:180px;" alt="">
 								</div>
 								<div class="favorite favorite_left"></div>
 								<!-- <div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-$20</span></div> -->
 								<div class="product_info">
-									<h6 class="product_name"><a href="{{ route('show-item', ['id' => $item->id])}}">{!! ucfirst($item->item_name) !!}</a></h6>
+									<h6 class="product_name"><a style="font-weight: normal;font-size:12px;" href="{{ route('show-item', ['id' => $item->id])}}">{!! ucfirst($item->item_name) !!}</a></h6>
 									<div class="product_price">₦ {{ $item->item_price }}</div>
 								</div>
 							</div>
-							<div class="red_button add_to_cart_button"><a href="#" class="addToCart" data-iid="{{$item->id}}">add to cart</a></div>
+							<div class="red_button add_to_cart_button">
+								<a href="#" class="addToCart pull-right" data-iid="{{$item->id}}"><i class="fa fa-2x pull-left" aria-hidden="true"></i>add to cart</a>
+
+							</div>
 						</div>
 						@endforeach
 						@endisset

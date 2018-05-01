@@ -4,6 +4,7 @@ namespace Previs\Services;
 
 use Previs\Models\Order;
 use Previs\Models\User;
+use Mail;
 
 class Notifier
 {
@@ -13,11 +14,11 @@ class Notifier
         echo "Email sent!";
     }
 
-    public function notifyAdmin(User $user, Order $order)
+    public static function notifyAdmin(User $user, Order $order)
     {
-        $message = realpath(__DIR__ . '/../views/emails/new-order.view.php');
-        $message = str_replace('%fullname%', $user->first_name . " " . $user->last_name, file_get_contents($message));
-        $mail = new Mail("xaviertim017@gmail.com", 'New Order Received.', $message);
+        // $message = realpath(__DIR__ . '/../views/emails/new-order.view.php');
+        // $message = str_replace('%fullname%', $user->first_name . " " . $user->last_name, file_get_contents($message));
+        $mail = new Mail("xaviertim017@gmail.com", 'New Order Received.', "New ORder was received mate!");
 
         try {
             return $mail->send();
