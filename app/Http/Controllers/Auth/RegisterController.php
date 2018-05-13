@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Previs\Services\Notifier;
 
 class RegisterController extends Controller
 {
@@ -86,9 +87,9 @@ class RegisterController extends Controller
 
         $user = $this->create($request->all());
 
-        // $res = Notifier::welcome($user); // send welcome email
-
         $this->guard()->login($user);
+
+        Notifier::welcome($user);
 
         if ($request->checkout == true) {
             // dd($request->checkout);
