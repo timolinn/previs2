@@ -16,7 +16,7 @@ class CreateShoppingcartTable extends Migration
             $table->increments('id');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->jsonb('content');
+            $table->longtext('content');
             $table->timestamps();
         });
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
